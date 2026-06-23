@@ -14,19 +14,17 @@ tab_pos, tab_pimus = st.tabs(["📋 Sezione POS", "🪜 Sezione PiMUS"])
 
 # Funzione per inviare i dati via email usando FormSubmit
 def invia_dati_email(tipo_documento, dati_dizionario):
-    # FormSubmit invia i dati alla tua mail in automatico
     url_servizio = f"https://formsubmit.co/{IL_TUO_INDIRIZZO_EMAIL}"
-    
-    # Prepariamo il testo dell'email
     corpo_mail = {
         "_subject": f"🆕 Nuova richiesta {tipo_documento} da App Cantieri",
         "Tipo Documento": tipo_documento
     }
     corpo_mail.update(dati_dizionario)
-    
-    # Invio della richiesta
-    risposta = requests.post(url_servizio, data=corpo_mail)
-    return risposta.status_code == 200
+    try:
+        risposta = requests.post(url_servizio, data=corpo_mail)
+        return risposta.status_code == 200
+    except:
+        return False
 
 # ------------------- SCHERMATA POS -------------------
 with tab_pos:
@@ -36,7 +34,6 @@ with tab_pos:
     oggetto_lavori = st.text_input("Oggetto delle Lavorazioni", key="pos_ogg")
     note_lavorazioni = st.text_area("Descrizione o note aggiuntive", key="pos_note")
     
-    # Nota sulle foto per questa versione semplificata
     st.info("💡 Per questa versione beta, invia le foto direttamente su WhatsApp indicando il nome del cantiere.")
     
     if st.button("Invia Dati POS al Tecnico"):
