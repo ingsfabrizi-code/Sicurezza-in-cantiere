@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
 
-# ⚠️ INSERISCI QUI LA TUA EMAIL PROFESSIONALE
-IL_TUO_INDIRIZZO_EMAIL ="sicurezza@sigismondicostruzioni.com" 
+# ⚠️ EMAIL RIPULITA E CORRETTA
+IL_TUO_INDIRIZZO_EMAIL = "sicurezza@sigismondicostruzioni.com"
 
 # Configurazione della pagina
 st.set_page_config(page_title="Consulenza Edile Smart", page_icon="🏗️")
