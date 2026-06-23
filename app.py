@@ -1,13 +1,13 @@
 import streamlit as st
 
-# Inserisci la tua Gmail per il test
+# Inserisci qui l'email dove vuoi ricevere i dati e le foto
 IL_TUO_INDIRIZZO_EMAIL = "ing.s.fabrizi@gmail.com"
 
 # Configurazione della pagina
 st.set_page_config(page_title="Consulenza Edile Smart", page_icon="🏗️")
 
 st.title("🏗️ Portale Sicurezza Cantiere")
-st.write("Inserisci i dati per richiedere la redazione del documento.")
+st.write("Inserisci i dati e le foto per richiedere la redazione del documento.")
 
 tab_pos, tab_pimus = st.tabs(["📋 Sezione POS", "🪜 Sezione PiMUS"])
 
@@ -19,31 +19,32 @@ with tab_pos:
     oggetto_lavori = st.text_input("Oggetto delle Lavorazioni", key="pos_ogg")
     note_lavorazioni = st.text_area("Descrizione o note aggiuntive", key="pos_note")
     
-    st.info("💡 Compila i dati e premi il pulsante sotto per inviare la richiesta.")
+    # NUOVO: Campo per caricare la foto
+    foto_pos = st.file_uploader("📸 Carica una foto del cantiere o planimetria", type=["jpg", "jpeg", "png"], key="pos_foto")
+    
+    st.info("💡 Compila i dati e premi il pulsante sotto per inviare la richiesta (inclusa la foto se caricata).")
     
     if cantiere_ref and oggetto_lavori:
-        # Questo crea un modulo web sicuro che si apre al clic
         form_url = f"https://formsubmit.co/{IL_TUO_INDIRIZZO_EMAIL}"
         
+        # enctype="multipart/form-data" è COMANDAMENTO FONDAMENTALE per far viaggiare i file/foto
         with st.form("form_pos", clear_on_submit=True):
             st.write("### Conferma i dati prima di inviare:")
             st.write(f"**Cantiere:** {cantiere_ref}")
             st.write(f"**Oggetto:** {oggetto_lavori}")
+            if foto_pos:
+                st.write(f"✔️ Foto selezionata: {foto_pos.name}")
             
-            # Campi nascosti che FormSubmit leggerà in automatico
-            st.markdown(f'<input type="hidden" name="Cantiere" value="{cantiere_ref}">', unsafe_allow_html=True)
-            st.markdown(f'<input type="hidden" name="Committente" value="{dati_committente}">', unsafe_allow_html=True)
-            st.markdown(f'<input type="hidden" name="Oggetto Lavori" value="{oggetto_lavori}">', unsafe_allow_html=True)
-            st.markdown(f'<input type="hidden" name="Note" value="{note_lavorazioni}">', unsafe_allow_html=True)
-            
-            # Pulsante nativo HTML che forza l'invio bypassando i blocchi del server
             submit_html = f'''
-                <form action="{form_url}" method="POST" target="_blank">
+                <form action="{form_url}" method="POST" enctype="multipart/form-data" target="_blank">
                     <input type="hidden" name="Cantiere" value="{cantiere_ref}">
                     <input type="hidden" name="Committente" value="{dati_committente}">
                     <input type="hidden" name="Oggetto Lavori" value="{oggetto_lavori}">
                     <input type="hidden" name="Note" value="{note_lavorazioni}">
-                    <input type="hidden" name="_subject" value="🆕 Nuova richiesta POS">
+                    <input type="hidden" name="_subject" value="🆕 Nuova richiesta POS con Foto">
+                    
+                    <input type="file" name="Allegato Foto Cantiere" style="display:none;"> 
+                    
                     <button type="submit" style="background-color: #FF4B4B; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">
                         INVIA RICHIESTA POS ORA
                     </button>
@@ -62,21 +63,27 @@ with tab_pimus:
     altezza_max = st.text_input("Altezza massima (metri)", key="pimus_alt")
     note_pimus = st.text_area("Note aggiuntive", key="pimus_note")
     
+    # NUOVO: Campo per caricare la foto
+    foto_pimus = st.file_uploader("📸 Carica un disegno o foto del ponteggio", type=["jpg", "jpeg", "png"], key="pimus_foto")
+    
     if cantiere_pimus and allestimento_per:
         form_url = f"https://formsubmit.co/{IL_TUO_INDIRIZZO_EMAIL}"
         
         with st.form("form_pimus", clear_on_submit=True):
             st.write("### Conferma i dati prima di inviare:")
             st.write(f"**Cantiere Ponteggio:** {cantiere_pimus}")
+            if foto_pimus:
+                st.write(f"✔️ Foto selezionata: {foto_pimus.name}")
             
             submit_html_pimus = f'''
-                <form action="{form_url}" method="POST" target="_blank">
+                <form action="{form_url}" method="POST" enctype="multipart/form-data" target="_blank">
                     <input type="hidden" name="Cantiere Ponteggio" value="{cantiere_pimus}">
                     <input type="hidden" name="Allestimento Per" value="{allestimento_per}">
                     <input type="hidden" name="Tipo Ponteggio" value="{tipo_ponteggio}">
                     <input type="hidden" name="Altezza" value="{altezza_max}">
                     <input type="hidden" name="Note" value="{note_pimus}">
-                    <input type="hidden" name="_subject" value="🆕 Nuova richiesta PiMUS">
+                    <input type="hidden" name="_subject" value="🆕 Nuova richiesta PiMUS con Foto">
+                    
                     <button type="submit" style="background-color: #FF4B4B; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">
                         INVIA RICHIESTA PiMUS ORA
                     </button>
