@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ✉️ Inserisci qui l'email finale (Aziendale o Gmail)
-IL_TUO_INDIRIZZO_EMAIL = "ing.s.fabrizi@gmail.com"
+IL_TUO_INDIRIZZO_EMAIL = "sicurezza@sigismondicostruzioni.com"
 
 # Configurazione della pagina
 st.set_page_config(page_title="Consulenza Edile Smart", page_icon="🏗️")
